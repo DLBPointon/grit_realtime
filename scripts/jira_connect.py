@@ -2,8 +2,9 @@ import csv
 import json
 import re
 import os
-from os import path
-from atlassian import Jira
+import sys
+from jira import JIRA
+from requests_toolbelt import user_agent
 import logging
 import logging.config
 import argparse
@@ -99,10 +100,11 @@ V6   - Current Version is a rewrite of V5
      - Because of the above, Pagination!
      Now gets all data rather than just the first
      970 (-30 tickets that get thrown out).
+V7   - Re-written to use the better JIRA library
 
 """
 
-VERSION = "6.0.0"
+VERSION = "7.0.0"
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -116,60 +118,27 @@ def parse_args():
     parser.add_argument(
         "-l", "--hardlimit", type=int, help="Hardlimit for Jira. MAX is 1000.", default=800
     )
+    parser.add_argument(
+        "-e", "--env", help="Environ file", type=str, default=".env"
+    )
     parser.add_argument("-v", "--version", action="version", version=VERSION)
 
     return parser.parse_args()
 
 
-def dotloader():
-    load_dotenv("../.env")
-    jira_user = os.getenv("JIRA_USER")
-    jira_pass = os.getenv("JIRA_PASS")
-    jira_token = os.getenv("JIRA_TOKEN")
-    return jira_user, jira_pass, jira_token
+def dotloader(env_arg: str) -> str | None:
+    load_dotenv(env_arg)
+    return os.getenv("JIRA_TOKEN") if os.getenv("JIRA_TOKEN") != None else sys.exit(f"Where is the 'JIRA_TOKEN' its not in -e {env_arg}?")
 
 
-def get_list_of_pages(limit: int, max_results: int):
-    start = 0
-    index_list = []
-    while limit < max_results:
-
-        index_list.append([start, limit, limit])
-        start += limit + 1
-        limit += limit
-        if limit > max_results:
-            index_list.append([start - 801, max_results, limit])
-
-    return index_list
-
-
-def get_pages(hard_limit, limit_list, jira_jql, jira):
-    return jira.jql(
-        jql=jira_jql,
-        start=limit_list[0],
-        limit=hard_limit,
-    )
-
-
-def prep_folder(location):
+def prep_folder(location: str) -> None:
     directory = "/".join(location.split("/")[:-1])
     os.makedirs(directory, exist_ok=True)
 
-    if path.exists(location):
+    if os.path.exists(location):
         os.popen(f"rm {location}")
     else:
         os.popen(f"touch {location}")
-
-
-def append_tsv(issue, location):
-    """
-    appends rather than overwrites
-    :return:
-    """
-    logging.info(">- WRITING TO OUTPUT TSV: %s", location)
-    with open(location, "a+", newline="") as end_file:
-        tsv_out = csv.writer(end_file, delimiter="\t")
-        tsv_out.writerow(issue)
 
 
 def filter_maker(level):
@@ -181,6 +150,11 @@ def filter_maker(level):
     return filter
 
 
+def quick_validate(output_file: str) -> int:
+    with open("../grit-boot/output/jira_dump.tsv") as input:
+        return len(input.readlines())
+
+
 def main():
     """
     Main function to control essential aspects of script
@@ -190,54 +164,86 @@ def main():
 
     data_recorder = {}
     jira_jql = 'project IN ("ToL Assembly curation", "ToL Rapid Curation") AND status IN (Done, Submitted,"In Submission", "Post Processing++") ORDER BY key ASC'
-    user, password, token = dotloader()
 
     args = parse_args()
 
+    token = dotloader(args.env)
+
+    logging.info("Cleaning old TSV")
     prep_folder(args.output)
 
     logging.info("Logging into Jira")
-    jira = "https://jira.sanger.ac.uk"
-    auth_jira = Jira(url=jira, username="ENV", password="ENV")
+    auth_jira = JIRA(
+        server = "https://jira.sanger.ac.uk",
+        token_auth=(token),
+        options={"headers": {"User-Agent": user_agent("GRIT_realtime", VERSION)}},
+    )
 
     logging.info("Sending JQL query")
     logging.debug("JQL = %s", jira_jql)
-    issues = auth_jira.jql(
-        jql=jira_jql,
-        limit=args.hardlimit,
-    )
 
-    data_recorder["total tickets"] = issues["total"]
-    limit_list = get_list_of_pages(args.hardlimit, issues["total"])
-    logging.info("Calculating number of pages: %d", len(limit_list))
-
-    total_list = []
+    start_at = 0
+    all_issues = []
+    pages = 1
     remov_list = []
-    temp = [[250,300, 50]]
-    for sublist in limit_list:
-        logging.info("|>---- STARTING PAGE FOR ISSUES %s", sublist)
-        page = get_pages(sublist[2], sublist, jira_jql, auth_jira)
-        for i in page["issues"]:
-            temp = i["key"]
-            logging.info("|----> STARTING %s", temp)
-            summary_search = re.search(r"(not being curated)", i["fields"]["summary"])
-            if summary_search:
-                if summary_search.group(1) == "(not being curated)":
-                    remov_list.append(temp)
-                    pass
-            else:
-                if i["fields"]["customfield_11608"] is None:
-                    remov_list.append(temp)
-                    pass
+    total_list = 0
 
-                jira_obj = JiraIssue(i)
-                append_tsv(jira_obj.output_list(), args.output)
-                total_list.append(i["key"])
+    # ---
 
-    logging.info("JiraIssue Obj. list is: %s ", len(total_list))
-    logging.info("No. of Tickets removed: %s ", len(remov_list))
+    with open(args.output, "a+", newline="") as end_file:
+        tsv_out = csv.writer(end_file, delimiter="\t")
+        logging.info("|> WRITING TO OUTPUT TSV: %s", args.output)
 
+        while True:
 
+            logging.info("|--> STARTING PAGE FOR ISSUES %s", pages)
+            pages += 1
+            batch = auth_jira.search_issues(
+                jira_jql,
+                startAt=start_at,
+                maxResults=args.hardlimit,
+            )
+
+            logging.info("|----> : Issue Count so far is %s", len(all_issues))
+
+            for i in batch:
+                logging.info("|----> STARTING %s", i.key)
+                assembly_stats = i.get_field("customfield_11608")
+                summary_search = re.search(r"(not being curated)", i.fields.summary)
+                if summary_search:
+                    if summary_search.group(1) == "(not being curated)":
+                        remov_list.append(i.key)
+                        pass
+                else:
+                    if assembly_stats is None:
+                        remov_list.append(i.key)
+                        pass
+
+                    jira_obj = JiraIssue(i)
+                    total_list += 1
+
+                    tsv_out.writerow(jira_obj.output_list())
+
+            all_issues.extend(batch)
+
+            # ResultList has a .total with the server-side total
+            if start_at + len(batch) >= batch.total:
+                break
+
+            start_at += len(batch)
+
+    end_file.close
+
+    file_lines = quick_validate(args.output)
+
+    logging.info("| TOTAL NUMBER OF ISSUES | %s \t|",len(all_issues))
+    logging.info("| No. of Tickets removed | %s \t|", len(remov_list))
+    logging.info("| JiraIssue Obj. list is | %s \t|", total_list)
+    logging.info("| Verified in out file   | %s \t|", file_lines)
+    logging.info("| Tickets removed Inc    | %s \t|", remov_list)
+
+    if file_lines != total_list:
+        logging.critical("Output file line count != valid jira tickets! Something's wrong outputting to file!")
 
 
 if __name__ == "__main__":

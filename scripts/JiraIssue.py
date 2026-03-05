@@ -11,76 +11,76 @@ class JiraIssue:
 
     def __init__(self, raw_issue):
         JiraIssue._ids += 1
-        fields = raw_issue["fields"]
+        fields = raw_issue.fields
 
         self.instance_no = JiraIssue._ids
-        self.issue = raw_issue["key"]
-        self.ticket_type = str(raw_issue["key"]).split("-")[0]
-        self.project_type = fields["issuetype"]["name"]
+        self.issue = raw_issue.key
+        self.ticket_type = str(self.issue).split("-")[0]
+        self.project_type = fields.issuetype.name
         self.scientific_name, self.family_data = self.get_taxonomy(
-            fields["customfield_11676"]
+            raw_issue.get_field("customfield_11676")
         )
         self.curator = (
-            fields["customfield_11657"]["value"]
-            if fields["customfield_11657"]
+            raw_issue.get_field("customfield_11657")#["value"]
+            if raw_issue.get_field("customfield_11657")
             else "EXTERNAL"
         )
-        self.summary = fields["summary"]
+        self.summary = fields.summary
         self.name_and_accession = self.parse_db_name(
-            fields["customfield_11643"],  # Geval DB ID
-            fields["customfield_11627"],  # Sample ID - ToLID Minus accession
-            fields["customfield_11609"],  # supposed to be the accession
+            raw_issue.get_field("customfield_11643"),  # Geval DB ID
+            raw_issue.get_field("customfield_11627"),  # Sample ID - ToLID Minus accession
+            raw_issue.get_field("customfield_11609"),  # supposed to be the accession
         )
         self.prefix, self.prefix_verbose, self.prefix_label = self.get_prefixes(
-            fields["customfield_11627"]  # Sample ID - ToLID Minus accession
+            raw_issue.get_field("customfield_11627")  # Sample ID - ToLID Minus accession
         )
         self.length_before, self.length_after, self.length_change_per = (
-            self.get_length_info(fields["customfield_11608"])
+            self.get_length_info(raw_issue.get_field("customfield_11608"))
         )
         self.date_updated = date.today()
-        self.date_created = self.get_date(fields["created"])
+        self.date_created = self.get_date(fields.created)
         self.telo_motif = (
             "N/A"
-            if fields["customfield_11650"] is None
-            else fields["customfield_11650"]
+            if raw_issue.get_field("customfield_11650") is None
+            else raw_issue.get_field("customfield_11650")
         )
 
         self.telo_len = (
             0
-            if fields["customfield_11651"] is None
-            else int(fields["customfield_11651"])
+            if raw_issue.get_field("customfield_11651") is None
+                else int(raw_issue.get_field("customfield_11651"))
         )
         self.chr_naming = (
-            fields["customfield_11607"]["value"]
-            if fields["customfield_11607"] != None
+            raw_issue.get_field("customfield_11607") #get the value
+            if raw_issue.get_field("customfield_11607") != None
             else "N/A"
         )
-        self.expected_sex = self.get_sex(fields["customfield_11641"])
-        self.observed_sex = self.get_sex(fields["customfield_11601"])
+        self.expected_sex = self.get_sex(raw_issue.get_field("customfield_11641"))
+        self.observed_sex = self.get_sex(raw_issue.get_field("customfield_11601"))
         self.curated_auto = (
-            int(fields["customfield_11659"])
-            if fields["customfield_11659"] != None
+            int(raw_issue.get_field("customfield_11659"))
+            if raw_issue.get_field("customfield_11659") != None
             else 0
         )
         self.curated_allo = (
-            self.fix_odd_data(fields["customfield_11617"])
-            if fields["customfield_11617"] != None
+            self.fix_odd_data(raw_issue.get_field("customfield_11617"))
+            if raw_issue.get_field("customfield_11617") != None
             else "N/A"
         )
 
         self.n50_before, self.n50_after, self.n50_change_percentage = self.get_n50_info(
-            fields["customfield_11608"]
+            raw_issue.get_field("customfield_11608")
         )
 
         self.scaff_count_before, self.scaff_count_after, self.scaff_count_percentage = (
-            self.get_scaff_count(fields["customfield_11608"])
+            self.get_scaff_count(raw_issue.get_field("customfield_11608"))
         )
 
         self.chr_assignment, self.assignment_percent = self.get_chr_data(
-            fields["customfield_11645"]
+            raw_issue.get_field("customfield_11645")
         )
 
-        self.interventions = self.calc_interventions(fields)
+        self.interventions = self.calc_interventions(raw_issue)
 
         self.collection = self.__iter__()
 
@@ -134,14 +134,14 @@ class JiraIssue:
             print(f"Non-standard: {sample_name}")
         else:
             prefix_search = re.search(r"([a-z])", sample_name)
-            prefix = prefix_search.group(1)
+            prefix = prefix_search.group(1) if prefix_search != None else None
 
             prefix_verbose_search = re.search(r"([a-z]*)", sample_name)
-            prefix_verbose = prefix_verbose_search.group(1)
+            prefix_verbose = prefix_verbose_search.group(1) if prefix_verbose_search != None else None
 
         prefix_full = ""
 
-        if len(prefix_verbose) == 2:
+        if len(str(prefix_verbose)) == 2:
             prefix_full = dl_dict.get(prefix_verbose)
         else:
             prefix_full = master_dict.get(prefix)
@@ -166,14 +166,14 @@ class JiraIssue:
         :return:
         """
         scientific_name_search = re.search(r"([A-Z]\S*.\w*)", latin_name)
-        scientific_name_result = scientific_name_search.group(1)
+        scientific_name_result = scientific_name_search.group(1) if scientific_name_search != None else None
 
         # For the occasional "genus_species" result rather than "genus species"
-        if "_" in scientific_name_result:
-            split_here = scientific_name_result.split("_")
+        if "_" in str(scientific_name_result):
+            split_here = str(scientific_name_result).split("_")
             scientific_name_result = " ".join(split_here)
 
-        scientific_name = scientific_name_result.split(" ")
+        scientific_name = str(scientific_name_result).split(" ")
 
         response = requests.get(
             f"https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/{scientific_name[0]}%20{scientific_name[1]}"
@@ -208,9 +208,12 @@ class JiraIssue:
         """
         if data:
             length_search = re.search(r"total\s*([0-9]\w+)\s*([0-9]\w+)", data)
-            length_before = int(length_search.group(1))
-            length_after = int(length_search.group(2))
-            length_change_per = (length_after - length_before) / length_before * 100
+            length_before = int(length_search.group(1)) if length_search != None else None
+            length_after = int(length_search.group(2)) if length_search != None else None
+            if not length_after == None and not length_before == None:
+                length_change_per = (length_after - length_before) / length_before * 100
+            else:
+                length_change_per = None
         else:
             length_before, length_after, length_change_per = None, None, None
         return length_before, length_after, length_change_per
@@ -223,13 +226,14 @@ class JiraIssue:
         """
         if scaff_data:
             n50_search = re.search(r"N50\s*([0-9]*)\s*([0-9]*)", scaff_data)
-            n50_before = int(n50_search.group(1))
-            n50_after = int(n50_search.group(2))
-            n50_ab = n50_after - n50_before
-            if n50_ab == 0:
-                n50_change_per = 0
-            else:
-                n50_change_per = (n50_after - n50_before) / n50_before * 100
+            if n50_search != None:
+                n50_before = int(n50_search.group(1))
+                n50_after = int(n50_search.group(2))
+                n50_ab = n50_after - n50_before
+                if n50_ab == 0:
+                    n50_change_per = 0
+                else:
+                    n50_change_per = (n50_after - n50_before) / n50_before * 100
         else:
             n50_before, n50_after, n50_change_per = None, None, None
 
@@ -243,14 +247,15 @@ class JiraIssue:
         """
         if scaff_data:
             scaff_count_search = re.search(r"count\s*([0-9]*)\s*([0-9]*)", scaff_data)
-            scaff_count_before = int(scaff_count_search.group(1))
-            scaff_count_after = int(scaff_count_search.group(2))
-            if scaff_count_before + scaff_count_after == 0:
-                scaff_count_per = 0
-            else:
-                scaff_count_per = (
-                    (scaff_count_after - scaff_count_before) / scaff_count_before * 100
-                )
+            if scaff_count_search != None:
+                scaff_count_before = int(scaff_count_search.group(1))
+                scaff_count_after = int(scaff_count_search.group(2))
+                if scaff_count_before + scaff_count_after == 0:
+                    scaff_count_per = 0
+                else:
+                    scaff_count_per = (
+                        (scaff_count_after - scaff_count_before) / scaff_count_before * 100
+                    )
         else:
             scaff_count_before, scaff_count_after, scaff_count_per = None, None, None
 
@@ -282,13 +287,13 @@ class JiraIssue:
 
         return chr_ass, ass_percent
 
-    def calc_interventions(self, fields):
+    def calc_interventions(self, issue):
         interventions = 0
         interaction_list = {
-            "manual_breaks": fields["customfield_11615"],
-            "manual_joins": fields["customfield_11681"],
-            "manual_inversions": fields["customfield_10610"],
-            "manual_haplotig_removals": fields["customfield_11632"],
+            "manual_breaks": issue.get_field("customfield_11615"),
+            "manual_joins": issue.get_field("customfield_11681"),
+            "manual_inversions": issue.get_field("customfield_10610"),
+            "manual_haplotig_removals": issue.get_field("customfield_11632"),
         }
 
         for x, y in interaction_list.items():
@@ -298,7 +303,7 @@ class JiraIssue:
         return interventions
 
     def get_sex(self, data):
-        return data["value"] if data else None
+        return data if data else None
 
     def output_list(self):
         return [
