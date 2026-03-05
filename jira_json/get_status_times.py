@@ -15,7 +15,6 @@ def calculate_timedelta(start, end):
 
 
 def calculate_time_in_status(creation_date, status_changelog):
-    datime_fmt = "%Y-%m-%dT%H:%M:%S.%f%z"
 
     time_in_status = {}
     for i in status_changelog:

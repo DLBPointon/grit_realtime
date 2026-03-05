@@ -52,19 +52,19 @@ class JiraIssue:
         )
         self.chr_naming = (
             raw_issue.get_field("customfield_11607") #get the value
-            if raw_issue.get_field("customfield_11607") != None
+            if raw_issue.get_field("customfield_11607") is not None
             else "N/A"
         )
         self.expected_sex = self.get_sex(raw_issue.get_field("customfield_11641"))
         self.observed_sex = self.get_sex(raw_issue.get_field("customfield_11601"))
         self.curated_auto = (
             int(raw_issue.get_field("customfield_11659"))
-            if raw_issue.get_field("customfield_11659") != None
+            if raw_issue.get_field("customfield_11659") is not None
             else 0
         )
         self.curated_allo = (
             self.fix_odd_data(raw_issue.get_field("customfield_11617"))
-            if raw_issue.get_field("customfield_11617") != None
+            if raw_issue.get_field("customfield_11617") is not None
             else "N/A"
         )
 
@@ -134,10 +134,10 @@ class JiraIssue:
             print(f"Non-standard: {sample_name}")
         else:
             prefix_search = re.search(r"([a-z])", sample_name)
-            prefix = prefix_search.group(1) if prefix_search != None else None
+            prefix = prefix_search.group(1) if prefix_search is not None else None
 
             prefix_verbose_search = re.search(r"([a-z]*)", sample_name)
-            prefix_verbose = prefix_verbose_search.group(1) if prefix_verbose_search != None else None
+            prefix_verbose = prefix_verbose_search.group(1) if prefix_verbose_search is not None else None
 
         prefix_full = ""
 
@@ -166,7 +166,7 @@ class JiraIssue:
         :return:
         """
         scientific_name_search = re.search(r"([A-Z]\S*.\w*)", latin_name)
-        scientific_name_result = scientific_name_search.group(1) if scientific_name_search != None else None
+        scientific_name_result = scientific_name_search.group(1) if scientific_name_search is not None else None
 
         # For the occasional "genus_species" result rather than "genus species"
         if "_" in str(scientific_name_result):
@@ -208,9 +208,9 @@ class JiraIssue:
         """
         if data:
             length_search = re.search(r"total\s*([0-9]\w+)\s*([0-9]\w+)", data)
-            length_before = int(length_search.group(1)) if length_search != None else None
-            length_after = int(length_search.group(2)) if length_search != None else None
-            if not length_after == None and not length_before == None:
+            length_before = int(length_search.group(1)) if length_search is not None else None
+            length_after = int(length_search.group(2)) if length_search is not None else None
+            if length_after is not None and length_before is not None:
                 length_change_per = (length_after - length_before) / length_before * 100
             else:
                 length_change_per = None
@@ -226,7 +226,7 @@ class JiraIssue:
         """
         if scaff_data:
             n50_search = re.search(r"N50\s*([0-9]*)\s*([0-9]*)", scaff_data)
-            if n50_search != None:
+            if n50_search is not None:
                 n50_before = int(n50_search.group(1))
                 n50_after = int(n50_search.group(2))
                 n50_ab = n50_after - n50_before
@@ -247,7 +247,7 @@ class JiraIssue:
         """
         if scaff_data:
             scaff_count_search = re.search(r"count\s*([0-9]*)\s*([0-9]*)", scaff_data)
-            if scaff_count_search != None:
+            if scaff_count_search is not None:
                 scaff_count_before = int(scaff_count_search.group(1))
                 scaff_count_after = int(scaff_count_search.group(2))
                 if scaff_count_before + scaff_count_after == 0:
@@ -297,7 +297,7 @@ class JiraIssue:
         }
 
         for x, y in interaction_list.items():
-            if y != None:
+            if y is not None:
                 interventions += int(y)
 
         return interventions

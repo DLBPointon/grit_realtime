@@ -128,7 +128,7 @@ def parse_args():
 
 def dotloader(env_arg: str) -> str | None:
     load_dotenv(env_arg)
-    return os.getenv("JIRA_TOKEN") if os.getenv("JIRA_TOKEN") != None else sys.exit(f"Where is the 'JIRA_TOKEN' its not in -e {env_arg}?")
+    return os.getenv("JIRA_TOKEN") if os.getenv("JIRA_TOKEN") is not None else sys.exit(f"Where is the 'JIRA_TOKEN' its not in -e {env_arg}?")
 
 
 def prep_folder(location: str) -> None:
@@ -162,7 +162,6 @@ def main():
     """
     logging.config.dictConfig(json.loads(CONFIG))
 
-    data_recorder = {}
     jira_jql = 'project IN ("ToL Assembly curation", "ToL Rapid Curation") AND status IN (Done, Submitted,"In Submission", "Post Processing++") ORDER BY key ASC'
 
     args = parse_args()
