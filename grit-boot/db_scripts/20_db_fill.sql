@@ -1,0 +1,1 @@
+COPY GritData FROM '/var/lib/postgresql/gritdb/jira_dump.tsv' CSV HEADER DELIMITER E'\t' NULL '';

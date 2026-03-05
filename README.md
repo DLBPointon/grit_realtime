@@ -1,7 +1,8 @@
 # Implementing real time surveillance of genome curation impact on assembly quality
 By Damon-Lee B Pointon (dp24)
 
-This project was originally released as grit-realtime, an RShiny app. However, due to organisational changes
+This project was originally released as grit-realtime, in 2020-ish, as a RShiny app. 
+However, due to organisational changes and issues with memory scaling in RShiny at the time
 it was decided that this project should be re-written in the java framework javascript and HTML
 as well as in a modernised tripartite docker container system controlled by docker-compose.
 
@@ -185,4 +186,3 @@ This will directly update the psql database via calls to the JIRA_API and then t
 
 ## TO-DO List
 Found on the issues page
-
