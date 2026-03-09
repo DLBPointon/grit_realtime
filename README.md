@@ -39,7 +39,7 @@ docker compose up -d
 
 --> Upon shutdown use the below to remove the existing database (doesn't delete the tsv file so you font need to run the jira_connect.py script again)
 
-/usr/local/bin/docker-compose down --volumes 
+docker-compose down --volumes 
     
 ```
 
