@@ -3,8 +3,10 @@ import re
 import maya
 from datetime import date
 import requests
+import logging
 from prefix_assignments import master_dict, dl_dict
 
+logger = logging.getLogger(__name__)
 
 class JiraIssue:
     _ids = 0
@@ -123,15 +125,15 @@ class JiraIssue:
         if sample_name.startswith("CAM"):
             prefix = "i"
             prefix_verbose = "il"
-            print(f"Non-standard: {sample_name}")
+            logging.info(f"|> Non-standard ticket: {sample_name}")
         elif sample_name.startswith("PS"):
             prefix = "n"
             prefix_verbose = "nx"
-            print(f"Non-standard: {sample_name}")
+            logging.info(f"|> Non-standard ticket: {sample_name}")
         elif sample_name.startswith("HG"):
             prefix = "m"
             prefix_verbose = "m"
-            print(f"Non-standard: {sample_name}")
+            logging.info(f"|> Non-standard ticket: {sample_name}")
         else:
             prefix_search = re.search(r"([a-z])", sample_name)
             prefix = prefix_search.group(1) if prefix_search is not None else None

@@ -10,10 +10,10 @@ function makegraph() {
     three = three.options[three.selectedIndex].value
 
     if (two === 'mipergb') {
-        var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?select='+one+',manual_interventions,'+three+',length_after'
-            } else {
-        var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?select='+one+','+two+','+three
-            }
+        var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',manual_interventions,' + three + ',length_after'
+    } else {
+        var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three
+    }
 
 
 
@@ -27,7 +27,7 @@ function makegraph() {
             x.push(item[one]);
 
             if (two === 'mipergb') {
-                y.push((item['manual_interventions']/item['length_after'])*1000000000)
+                y.push((item['manual_interventions'] / item['length_after']) * 1000000000)
             } else {
                 y.push(item[two]);
             }
@@ -46,7 +46,7 @@ function makegraph() {
             }],
             name: 'maingraph1',
             marker: {
-                line: {width: 1,},
+                line: { width: 1, },
                 symbol: 'circle',
                 size: 5
             }
@@ -61,34 +61,34 @@ function makegraph() {
                 showgrid: false,
                 showline: true,
                 linecolor: 'rgb(102, 102, 102)',
-                titlefont: {font: {color: 'rgb(204, 204, 204)'}},
-                tickfont: {font: {color: 'rgb(102, 102, 102)'}},
+                titlefont: { font: { color: 'rgb(204, 204, 204)' } },
+                tickfont: { font: { color: 'rgb(102, 102, 102)' } },
                 autotick: true,
                 dtick: 10,
                 ticks: 'outside',
                 tickcolor: 'rgb(102, 102, 102)'
             },
             margin: {
-                    l: 50,
-                    r: 50,
-                    b: 100
+                l: 50,
+                r: 50,
+                b: 100
             },
             legend: {
-                font: {size: 8,},
+                font: { size: 8, },
                 yanchor: 'middle',
                 xanchor: 'right'
             },
             autosize: true,
             width: elmnt
         };
-        var config = {responsive: true, displayModeBar: true}
+        var config = { responsive: true, displayModeBar: true }
         Plotly.newPlot('test', datas, layout, config);
 
-        document.getElementById('test').on('plotly_doubleclick', function(datas){
+        document.getElementById('test').on('plotly_doubleclick', function (datas) {
             console.log("This far")
-            Plotly.toImage('test', {format:'jpeg',height:500,width:800}).then(function(dataUrl){
+            Plotly.toImage('test', { format: 'jpeg', height: 500, width: 800 }).then(function (dataUrl) {
                 var iframe = "<iframe width='100%' height='100%' src='" +
-                dataUrl + "'></iframe>"
+                    dataUrl + "'></iframe>"
                 var x = window.open();
                 x.document.open();
                 x.document.write(iframe);
@@ -96,7 +96,7 @@ function makegraph() {
             });
 
         })
-        }
+    }
     )
 }
 

@@ -8,9 +8,9 @@ function makegraph_box() {
     three = three.options[three.selectedIndex].value
 
     if (two === 'mipergb') {
-        var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?select=manual_interventions,'+three+',length_after'
+        var url = 'http://0.0.0.0:8001/gritdata?select=manual_interventions,' + three + ',length_after'
     } else {
-        var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?select='+two+','+three
+        var url = 'http://0.0.0.0:8001/gritdata?select=' + two + ',' + three
     }
 
     d3.json(url, function (error, data) {
@@ -21,7 +21,7 @@ function makegraph_box() {
 
         data.forEach((item) => {
             if (two === 'mipergb') {
-                y.push((item['manual_interventions']/item['length_after'])*1000000000)
+                y.push((item['manual_interventions'] / item['length_after']) * 1000000000)
             } else {
                 y.push(item[two]);
             }
@@ -53,7 +53,7 @@ function makegraph_box() {
             },
         };
 
-        var config = {responsive: true, displayModeBar: true}
+        var config = { responsive: true, displayModeBar: true }
         Plotly.react('rightgraph1', datas, layout, config)
     })
 }

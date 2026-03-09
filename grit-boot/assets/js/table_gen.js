@@ -1,6 +1,6 @@
 function tabler() {
 
-    var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?select=sample_id,prefix_sl,family_name,length_change,scaff_n50_change,scaff_count_change,manual_interventions,date_in_ymd'
+    var url = 'http://0.0.0.0:8001/gritdata?select=sample_id,prefix_sl,family_name,length_change,scaff_n50_change,scaff_count_change,manual_interventions,date_in_ymd'
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -31,21 +31,21 @@ function tabler() {
             seven1, eight1]
 
         var datas = [{
-                type: 'table',
-                header:
-                    {
-                        values: [["sample_id"], ['prefix_sl'],
-                            ['family_name'], ['length_change'],
-                            ['scaff_n50_change'], ['scaff_count_change'],
-                            ['manual_interventions'], ['date_in_ymd']],
-                        align: "center"
-                    },
-                cells:
-                    {
-                        values: all_values,
-                        align: "center"
-                    }
-            }];
+            type: 'table',
+            header:
+            {
+                values: [["sample_id"], ['prefix_sl'],
+                ['family_name'], ['length_change'],
+                ['scaff_n50_change'], ['scaff_count_change'],
+                ['manual_interventions'], ['date_in_ymd']],
+                align: "center"
+            },
+            cells:
+            {
+                values: all_values,
+                align: "center"
+            }
+        }];
 
         Plotly.react('tableLoc', datas)
     })

@@ -8,7 +8,7 @@ function gevalgraph2() {
     var two = 'scaff_n50_change';
     var four = 'length_after';
 
-    var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?select=' + one + ',' + two + ',' + three + ',' + four;
+    var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three + ',' + four;
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -18,7 +18,7 @@ function gevalgraph2() {
         var label = [];
 
         data.forEach((item) => {
-            x.push(item[four]/1000000000);
+            x.push(item[four] / 1000000000);
             y.push(item[two]);
             c.push(item[three]);
             label.push('Org: ' + item[one] + ' | Percent change: ' + item[two])
@@ -42,17 +42,17 @@ function gevalgraph2() {
 
         var layout = {
             title: 'Scaff N50 count change (%) by Assembly size (Gb)',
-                xaxis: {
-                    title: 'Assembly Size (Gb)'
-                },
-                yaxis: {
-                    title: 'Scaff N50 count change (%)'
-                },
+            xaxis: {
+                title: 'Assembly Size (Gb)'
+            },
+            yaxis: {
+                title: 'Scaff N50 count change (%)'
+            },
             width: elmntgg2
 
         };
 
-        var config = {responsive: true, displayModeBar: true}
+        var config = { responsive: true, displayModeBar: true }
         Plotly.react('gevalgraph2', datas, layout, config)
 
     })

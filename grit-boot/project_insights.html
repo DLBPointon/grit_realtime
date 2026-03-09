@@ -122,9 +122,9 @@
                                                     proj = one.options[one.selectedIndex].value
 
                                                     if (tickets.includes(proj)) {
-                                                        var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?order=family_name.asc&project_code=in.(' + proj + ')'
+                                                        var url = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&project_code=in.(' + proj + ')'
                                                     } else {
-                                                        var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?order=family_name.asc&project_type=in.(' + proj + ')'
+                                                        var url = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&project_type=in.(' + proj + ')'
                                                     }
 
                                                     d3.json(url, function (error, data) {

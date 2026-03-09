@@ -8,7 +8,7 @@ function makegraph_2() {
     two = two.options[two.selectedIndex].value
     var three = 'project_type'
 
-    var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?select='+one+','+two+','+three
+    var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -20,7 +20,7 @@ function makegraph_2() {
             x.push(item[one]);
 
             if (two.includes('length_after')) {
-                y.push((item['manual_interventions']/item['length_after'])*1000000000)
+                y.push((item['manual_interventions'] / item['length_after']) * 1000000000)
             } else {
                 y.push(item[two]);
             }
@@ -39,7 +39,7 @@ function makegraph_2() {
             }],
             name: 'maingraph2',
             marker: {
-                line: {width: 1,},
+                line: { width: 1, },
                 symbol: 'circle',
                 size: 5
             }
@@ -55,33 +55,33 @@ function makegraph_2() {
                 showgrid: false,
                 showline: true,
                 linecolor: 'rgb(102, 102, 102)',
-                titlefont: {font: {color: 'rgb(204, 204, 204)'}},
-                tickfont: {font: {color: 'rgb(102, 102, 102)'}},
+                titlefont: { font: { color: 'rgb(204, 204, 204)' } },
+                tickfont: { font: { color: 'rgb(102, 102, 102)' } },
                 autotick: true,
                 dtick: 10,
                 ticks: 'outside',
                 tickcolor: 'rgb(102, 102, 102)'
             },
             margin: {
-                    l: 50,
-                    r: 0,
+                l: 50,
+                r: 0,
             },
             legend: {
-                font: {size: 8,},
+                font: { size: 8, },
                 yanchor: 'middle',
                 xanchor: 'right'
             },
             width: elmnt
         };
-        var config = {responsive: true, displayModeBar: true}
+        var config = { responsive: true, displayModeBar: true }
         Plotly.react('maingraph2', datas, layout, config);
 
 
-        document.getElementById('maingraph2').on('plotly_doubleclick', function(datas){
+        document.getElementById('maingraph2').on('plotly_doubleclick', function (datas) {
             console.log("This far")
-            Plotly.toImage('maingraph2', {format:'jpeg',height:500,width:800}).then(function(dataUrl){
+            Plotly.toImage('maingraph2', { format: 'jpeg', height: 500, width: 800 }).then(function (dataUrl) {
                 var iframe = "<iframe width='100%' height='100%' src='" +
-                dataUrl + "'></iframe>"
+                    dataUrl + "'></iframe>"
                 var x = window.open();
                 x.document.open();
                 x.document.write(iframe);
@@ -89,7 +89,7 @@ function makegraph_2() {
             });
 
         })
-        }
+    }
     )
 }
 

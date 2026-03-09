@@ -1,6 +1,6 @@
 function tabulatortabletelo() {
 
-    var tata = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?'
+    var tata = 'http://0.0.0.0:8001/gritdata?'
 
     d3.json(tata, function (error, data) {
         var table = new Tabulator("#teloTableLoc", {
@@ -8,9 +8,9 @@ function tabulatortabletelo() {
             pagination: 'local',
             paginationSize: 40,
             movableColumns: true,
-            virtualDomHoz:true,
-            groupBy:"prefix_dl",
-            groupClosedShowCalcs:true,
+            virtualDomHoz: true,
+            groupBy: "prefix_dl",
+            groupClosedShowCalcs: true,
             columns: [
                 {
                     title: "Sample ID",

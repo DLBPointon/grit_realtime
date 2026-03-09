@@ -10,10 +10,10 @@ function clade_box_proj() {
 
     var tickets = ['GRIT', 'RC'];
     if (tickets.includes(prefix)) {
-        var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?order=family_name.asc&project_code=in.('
+        var url = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&project_code=in.('
             + prefix + ')&select=family_name,prefix_dl,' + three
     } else {
-        var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?order=family_name.asc&project_type=in.('
+        var url = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&project_type=in.('
             + prefix + ')&select=family_name,prefix_dl,' + three
     };
 
@@ -25,7 +25,7 @@ function clade_box_proj() {
 
         data.forEach((item) => {
             if (three.includes('length_after')) {
-                y.push((item['manual_interventions']/item['length_after'])*1000000000)
+                y.push((item['manual_interventions'] / item['length_after']) * 1000000000)
             } else {
                 y.push(item[three]);
             }
@@ -58,7 +58,7 @@ function clade_box_proj() {
             },
         };
 
-        var config = {responsive: true, displayModeBar: true}
+        var config = { responsive: true, displayModeBar: true }
         Plotly.react('cladeboxP', datas, layout, config)
     })
 

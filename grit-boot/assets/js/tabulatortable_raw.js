@@ -1,6 +1,6 @@
 function tabulatortableraw() {
 
-    d3.json('https://grit-realtime-api.tol.sanger.ac.uk/gritdata?', function (error, data) {
+    d3.json('http://0.0.0.0:8001/gritdata?', function (error, data) {
         var table = new Tabulator("#tableLoc", {
             data: data,
             pagination: 'local',
@@ -41,12 +41,12 @@ function tabulatortableraw() {
                 {
                     title: "Length Before",
                     field: "length_before",
-                    topCalc:'sum'
+                    topCalc: 'sum'
                 },
                 {
                     title: "Length After",
                     field: "length_after",
-                    topCalc:'sum'
+                    topCalc: 'sum'
                 },
                 {
                     title: "Length Change",
@@ -55,12 +55,12 @@ function tabulatortableraw() {
                 {
                     title: "Scaff No. Before",
                     field: "scaff_count_before",
-                    topCalc:'sum'
+                    topCalc: 'sum'
                 },
                 {
                     title: "Scaff No. After",
                     field: "scaff_count_after",
-                    topCalc:'sum'
+                    topCalc: 'sum'
                 },
                 {
                     title: "Scaff No. Change",
@@ -69,12 +69,12 @@ function tabulatortableraw() {
                 {
                     title: "Scaff N50 Before",
                     field: "scaff_n50_before",
-                    topCalc:'sum'
+                    topCalc: 'sum'
                 },
                 {
                     title: "Scaff N50 After",
                     field: "scaff_n50_after",
-                    topCalc:'sum'
+                    topCalc: 'sum'
                 },
                 {
                     title: "Scaff N50 Change",
@@ -109,7 +109,7 @@ function tabulatortableraw() {
                 {
                     title: "C-Autosomes",
                     field: "curated_autosomes",
-                    topCalc:'sum'
+                    topCalc: 'sum'
                 }
             ],
         });

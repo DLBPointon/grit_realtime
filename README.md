@@ -9,8 +9,45 @@ as well as in a modernised tripartite docker container system controlled by dock
 grt-v5 is the initial step towards creating a dashboard for GRIT (Genome Reference Informatics Team)
 and offer decentralised access to metrics related to genome curation.
 
-### Notes:
-The docker-compose.yaml volumes are currently hardcoded for my machine, these will need changing.
+## Setup
+
+Be aware that as of 09/03/2026, the python script takes ~8 miunutes to complete.
+
+```
+git clone https://github.com/DLBPointon/grit_realtime.git
+cd grit_realtime
+
+--> FILE_PATH is used by the docker_compose file to find the files needed
+export FILE_PATH=$PWD
+
+--> if using UV:
+    uv venv
+    source .venv/bin/activate
+    uv pip install -r pyproject.toml
+--> else use venv and pip
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install pyproject.toml
+
+cp sample.env .env
+
+--> NOTE: Add your JIRA_TOKEN to the env file or the script will fail
+
+python scripts/jira_connect.py -e .env -s
+
+docker compose up -d
+
+--> Upon shutdown use the below to remove the existing database (doesn't delete the tsv file so you font need to run the jira_connect.py script again)
+
+/usr/local/bin/docker-compose down --volumes 
+    
+```
+
+`-o` is the output path, by default this is `./grit-boot/output/jira_dump.tsv`
+`-l` is the hardlimit, essentially a page limit of tickets.
+`-e` is the path to the .env file
+`-s` is silent, by default there is alot of logging
+
 
 ## Containers
 <details>
@@ -34,7 +71,7 @@ grt-v5_swagger_1 : A Swagger API UI.
 
 jira_connect.py - Main script which pulls data from the Jira API, massages and outputs to a sorted TSV file ready for ingestion by the docker containers.
 
-jira_2_db_update.py - Script to be run on a daily basis to update the PostgreSQL database with new data.
+JiraIssue.py - An Class for the collection and parsing of individual tickets.
 
 prefix_pull.py - An accessory script which pulls double letter assignments and clade information from the prefix_assignment_kj2.xlsx file.
 

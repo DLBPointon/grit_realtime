@@ -8,7 +8,7 @@ function clade_box() {
     var four = document.getElementById('CladeGraphSelector2C');
     four = four.options[four.selectedIndex].value
 
-    var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?order=family_name.asc&prefix_sl=in.('
+    var url = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&prefix_sl=in.('
         + prefix + ')&select=family_name,prefix_dl,' + three
 
     d3.json(url, function (error, data) {
@@ -19,7 +19,7 @@ function clade_box() {
 
         data.forEach((item) => {
             if (three.includes('length_after')) {
-                y.push((item['manual_interventions']/item['length_after'])*1000000000)
+                y.push((item['manual_interventions'] / item['length_after']) * 1000000000)
             } else {
                 y.push(item[three]);
             }
@@ -52,7 +52,7 @@ function clade_box() {
             },
         };
 
-        var config = {responsive: true, displayModeBar: true}
+        var config = { responsive: true, displayModeBar: true }
         Plotly.react('cladebox', datas, layout, config)
     })
 

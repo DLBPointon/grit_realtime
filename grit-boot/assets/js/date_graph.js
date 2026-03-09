@@ -14,7 +14,7 @@ function dategrapher() {
 
     var labels = 'sample_id'
 
-    var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?select='+one+','+two+','+three+','+four+','+labels
+    var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three + ',' + four + ',' + labels
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -24,27 +24,27 @@ function dategrapher() {
         var label = [];
         data.forEach((item) => {
 
-                x.push(item[two]);
+            x.push(item[two]);
 
-                if (item[three] === 'manual_interventions') {
-                    y.push((item[three]/item[four])*1000000000)
-                } else if (item[three] === 'length_after'){
-                    y.push(item[three]);
-                    console.log(y)
-                } else {
-                    y.push(item[three])
-                }
+            if (item[three] === 'manual_interventions') {
+                y.push((item[three] / item[four]) * 1000000000)
+            } else if (item[three] === 'length_after') {
+                y.push(item[three]);
+                console.log(y)
+            } else {
+                y.push(item[three])
+            }
 
-                c.push(item[one]);
+            c.push(item[one]);
 
-                label.push(item['sample_id'])
+            label.push(item['sample_id'])
         });
 
         var trace1 = {
             type: 'scatter',
             mode: 'markers',
             x: x,
-            y:y,
+            y: y,
             text: label,
             transforms: [{
                 type: 'groupby',
@@ -59,9 +59,10 @@ function dategrapher() {
         var layout = {
             title: 'Time Series of with Rangeslider',
             xaxis: {
-                title:'Date of Ticket creation',
+                title: 'Date of Ticket creation',
                 autorange: true,
-                rangeselector: { buttons: [
+                rangeselector: {
+                    buttons: [
                         {
                             count: 1,
                             label: '1 Month',
@@ -74,8 +75,9 @@ function dategrapher() {
                             step: 'month',
                             stepmode: 'backward'
                         },
-                        {step: 'all'}
-                    ]},
+                        { step: 'all' }
+                    ]
+                },
                 rangeslider: {
                     autorange: true
                 },
@@ -87,7 +89,7 @@ function dategrapher() {
             width: elmntdg
         };
 
-        var config = {responsive: true, displayModeBar: true}
+        var config = { responsive: true, displayModeBar: true }
         Plotly.newPlot('dategraphLoc', datas, layout, config);
     })
 }

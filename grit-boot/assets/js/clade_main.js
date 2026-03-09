@@ -12,8 +12,8 @@ function cladegrapher() {
     var four = document.getElementById('CladeGraphSelector1C');
     four = four.options[four.selectedIndex].value
 
-    var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?order=family_name.asc&prefix_sl=in.('
-        + prefix + ')&select='+ two +',family_name,prefix_dl,' + three
+    var url = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&prefix_sl=in.('
+        + prefix + ')&select=' + two + ',family_name,prefix_dl,' + three
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -25,7 +25,7 @@ function cladegrapher() {
             x.push(item[two]);
 
             if (three.includes('length_after')) {
-                y.push((item['manual_interventions']/item['length_after'])*1000000000)
+                y.push((item['manual_interventions'] / item['length_after']) * 1000000000)
             } else {
                 y.push(item[three]);
             }
@@ -46,7 +46,7 @@ function cladegrapher() {
             }],
             name: 'cladegraph',
             marker: {
-                line: {width: 1,},
+                line: { width: 1, },
                 symbol: 'circle',
                 size: 5
             }
@@ -60,27 +60,27 @@ function cladegrapher() {
                 showgrid: false,
                 showline: true,
                 linecolor: 'rgb(102, 102, 102)',
-                titlefont: {font: {color: 'rgb(204, 204, 204)'}},
-                tickfont: {font: {color: 'rgb(102, 102, 102)'}},
+                titlefont: { font: { color: 'rgb(204, 204, 204)' } },
+                tickfont: { font: { color: 'rgb(102, 102, 102)' } },
                 autotick: true,
                 dtick: 10,
                 ticks: 'outside',
                 tickcolor: 'rgb(102, 102, 102)'
             },
             margin: {
-                    l: 50,
-                    r: 0,
+                l: 50,
+                r: 0,
             },
             legend: {
-                font: {size: 8,},
+                font: { size: 8, },
                 yanchor: 'middle',
                 xanchor: 'right'
             },
             width: elmnt
         };
-        var config = {responsive: true, displayModeBar: true}
+        var config = { responsive: true, displayModeBar: true }
         Plotly.react('cladetest', datas, layout, config);
-        }
+    }
     )
 
 }

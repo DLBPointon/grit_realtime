@@ -3,7 +3,7 @@ function makegraph_pie() {
     var one = document.getElementById('RightGraphSelector2X');
     one = one.options[one.selectedIndex].value
 
-    var url = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?select='+one
+    var url = 'http://0.0.0.0:8001/gritdata?select=' + one
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -21,9 +21,9 @@ function makegraph_pie() {
         }
 
         var datas = [{
-        values: Object.values(count),
-        labels: Object.keys(count),
-        type:'pie'
+            values: Object.values(count),
+            labels: Object.keys(count),
+            type: 'pie'
         }];
 
         var elmntr2 = document.getElementById("rightgraph2").clientWidth - 30
@@ -39,10 +39,9 @@ function makegraph_pie() {
         };
 
 
-        var config = {responsive: true, displayModeBar: true}
+        var config = { responsive: true, displayModeBar: true }
         Plotly.react('rightgraph2', datas, layout, config);
     })
 
 
 }
-

@@ -3,6 +3,7 @@ import json
 import re
 import os
 import sys
+import time
 from jira import JIRA
 from requests_toolbelt import user_agent
 import logging
@@ -101,6 +102,7 @@ V6   - Current Version is a rewrite of V5
      Now gets all data rather than just the first
      970 (-30 tickets that get thrown out).
 V7   - Re-written to use the better JIRA library
+     - Better Logging
 
 """
 
@@ -113,7 +115,7 @@ def parse_args():
         description=textwrap.dedent(DESCRIPTION),
     )
     parser.add_argument(
-        "-o", "--output", type=str, help="Where to chuck the output?", default="../grit-boot/output/jira_dump.tsv"
+        "-o", "--output", type=str, help="Where to chuck the output?", default="./grit-boot/output/jira_dump.tsv"
     )
     parser.add_argument(
         "-l", "--hardlimit", type=int, help="Hardlimit for Jira. MAX is 1000.", default=800
@@ -121,6 +123,10 @@ def parse_args():
     parser.add_argument(
         "-e", "--env", help="Environ file", type=str, default=".env"
     )
+    parser.add_argument(
+        "-s", "--silent", help="Run without a rediculous amount of log", action='store_true'
+    )
+
     parser.add_argument("-v", "--version", action="version", version=VERSION)
 
     return parser.parse_args()
@@ -160,7 +166,9 @@ def main():
     Main function to control essential aspects of script
     :return:
     """
+    master_time = time.perf_counter()
     logging.config.dictConfig(json.loads(CONFIG))
+    logging.info("Starting clock")
 
     jira_jql = 'project IN ("ToL Assembly curation", "ToL Rapid Curation") AND status IN (Done, Submitted,"In Submission", "Post Processing++") ORDER BY key ASC'
 
@@ -195,7 +203,7 @@ def main():
 
         while True:
 
-            logging.info("|--> STARTING PAGE FOR ISSUES %s", pages)
+            logging.info("|--> STARTING PAGE %s FOR %s ISSUES", pages, args.hardlimit)
             pages += 1
             batch = auth_jira.search_issues(
                 jira_jql,
@@ -203,10 +211,11 @@ def main():
                 maxResults=args.hardlimit,
             )
 
-            logging.info("|----> : Issue Count so far is %s", len(all_issues))
+            logging.info("|----> Issue Count so far is %s", len(all_issues))
 
             for i in batch:
-                logging.info("|----> STARTING %s", i.key)
+                if not args.silent:
+                    logging.info("|----> STARTING %s", i.key)
                 assembly_stats = i.get_field("customfield_11608")
                 summary_search = re.search(r"(not being curated)", i.fields.summary)
                 if summary_search:
@@ -223,6 +232,10 @@ def main():
 
                     tsv_out.writerow(jira_obj.output_list())
 
+                    # Rather than a TSV intermediary file, we could use pycopg2 for direct to DB inserts and the tsv be optionals
+                    # https://www.geeksforgeeks.org/python/perform-insert-operations-with-psycopg2-in-python/
+                    # Batch inset the valid chunks into the database
+
             all_issues.extend(batch)
 
             # ResultList has a .total with the server-side total
@@ -231,15 +244,23 @@ def main():
 
             start_at += len(batch)
 
+            per_page = time.perf_counter()
+            logging.info(f"|----> Time stamp at Page {pages} == {per_page - master_time:0.4f} Seconds")
+
     end_file.close
 
     file_lines = quick_validate(args.output)
 
-    logging.info("| TOTAL NUMBER OF ISSUES | %s \t|",len(all_issues))
+    logging.info("| TOTAL NUMBER OF ISSUES | %s \t|", len(all_issues))
     logging.info("| No. of Tickets removed | %s \t|", len(remov_list))
     logging.info("| JiraIssue Obj. list is | %s \t|", total_list)
     logging.info("| Verified in out file   | %s \t|", file_lines)
-    logging.info("| Tickets removed Inc    | %s \t|", remov_list)
+    logging.info(f"| Tickets removed Inc --> {remov_list}")
+
+    script_time = time.perf_counter()
+    script_execution_time = script_time - master_time
+    logging.info(f"| Time for script execution == {script_execution_time:0.4f} Seconds")
+
 
     if file_lines != total_list:
         logging.critical("Output file line count != valid jira tickets! Something's wrong outputting to file!")

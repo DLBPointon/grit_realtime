@@ -2,17 +2,17 @@ function tabulatortableClade() {
     var one = document.getElementById('CladeSelector');
     prefix = one.value
 
-    var tableData = 'https://grit-realtime-api.tol.sanger.ac.uk/gritdata?order=family_name.asc&' +
-    'prefix_sl=in.(' + prefix +
-    ')&select=sample_id,prefix_dl,family_name,manual_interventions,' +
-    'chromosome_assignments,chromosome_naming,expected_sex,observed_sex,' +
-    'curated_allosomes,curated_autosomes,project_code'
+    var tableData = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&' +
+        'prefix_sl=in.(' + prefix +
+        ')&select=sample_id,prefix_dl,family_name,manual_interventions,' +
+        'chromosome_assignments,chromosome_naming,expected_sex,observed_sex,' +
+        'curated_allosomes,curated_autosomes,project_code'
 
 
-    var avgauto = function(values, data, calcparams){
+    var avgauto = function (values, data, calcparams) {
         var calc = 0
         var notodivide = 0
-        values.forEach(function(value){
+        values.forEach(function (value) {
             if (value > 0) {
                 calc = calc + value;
                 notodivide = notodivide + 1;
@@ -27,9 +27,9 @@ function tabulatortableClade() {
             pagination: 'local',
             paginationSize: 20,
             movableColumns: true,
-            layout:'fitColumns',
-            groupBy:"prefix_dl",
-            groupClosedShowCalcs:true,
+            layout: 'fitColumns',
+            groupBy: "prefix_dl",
+            groupClosedShowCalcs: true,
             columns: [
                 {
                     title: "Sample ID",
