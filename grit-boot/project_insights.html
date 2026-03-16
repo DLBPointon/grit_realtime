@@ -145,11 +145,19 @@
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary font-weight-bold m-0">Clade Specific</h6>
                                 </div>
-                                <div id='cladetestP' class="card-body" style="height:400px; width: auto" ></div>
+                                <div id='cladetestP' class="card-body" style="height:600px; width: auto" ></div>
+
+
 
                                 <div id='MainGraph1X' class="card-body" style="height: 25px;"></div>
                                     <div class="card-header d-flex justify-content-between align-items-center">
                                         <h6 class="text-primary font-weight-bold m-0">Graph Selector</h6>
+                                    </div>
+                                    <div class="card-body" style="height: 25px;">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="CladeGraphLegendToggleP" onchange="cladegrapherproj()" checked>
+                                            <label class="form-check-label" for="CladeGraphLegendToggleP">Show legend</label>
+                                        </div>
                                     </div>
                                     <label for="CladeGraphSelector1XP"></label>
                                     <select id="CladeGraphSelector1XP" onchange="cladegrapherproj()">
@@ -179,11 +187,17 @@
 
                                     <label for="CladeGraphSelector1CP"></label>
                                     <select id="CladeGraphSelector1CP" onchange="cladegrapherproj()">
-                                        <option value="prefix_dl" selected='selected'>
-                                            Y - DL prefix
+                                        <option value="prefix_sl" selected='selected'>
+                                            C - Single Letter prefix
+                                        </option>
+                                        <option value="prefix_dl">
+                                            C - Double Letter prefix
+                                        </option>
+                                        <option value="prefix_fn">
+                                            C - Full Prefix Name
                                         </option>
                                         <option value="family_name">
-                                            Y - Family Name
+                                            C - Family Name
                                         </option>
                                     </select>
                             </div>
@@ -193,11 +207,19 @@
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary font-weight-bold m-0">Boxplot</h6>
                                 </div>
-                                <div id='cladeboxP' class="card-body" style="height: 400px; width: auto"></div>
+                                <div id='cladeboxP' class="card-body" style="height: 600px; width: auto"></div>
+
+
 
                                 <div id='RightGraph1X' class="card-body" style="height: 25px;"></div>
                                     <div class="card-header d-flex justify-content-between align-items-center">
                                         <h6 class="text-primary font-weight-bold m-0">Graph Selector</h6>
+                                    </div>
+                                    <div class="card-body" style="height: 25px;">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="CladeBoxLegendToggleP" onchange="clade_box_proj()" checked>
+                                            <label class="form-check-label" for="CladeBoxLegendToggleP">Show legend</label>
+                                        </div>
                                     </div>
                                     <label for="CladeGraphSelector2YP"></label>
                                     <select id="CladeGraphSelector2YP" onchange="clade_box_proj()">
@@ -217,11 +239,17 @@
 
                                     <label for="CladeGraphSelector2CP"></label>
                                     <select id="CladeGraphSelector2CP" onchange="clade_box_proj()">
+                                        <option value="prefix_sl" selected='selected'>
+                                            Y - Single Letter prefix
+                                        </option>
                                         <option value="prefix_dl" selected='selected'>
-                                            C - Clade DL (e.g. ic, id, il)
+                                            Y - Double Letter prefix
+                                        </option>
+                                        <option value="prefix_fn" selected='selected'>
+                                            Y - Full Prefix Name
                                         </option>
                                         <option value="family_name">
-                                            C - Family Name (e.g. Bufonidae, Corvidae)
+                                            Y - Family Name
                                         </option>
                                     </select>
                             </div>
@@ -234,7 +262,7 @@
                                     <h6 class="text-primary font-weight-bold m-0">Table for DL karyotype outcome</h6>
                                 </div>
 
-                                <div id='clade' height="400px" width="auto"></div>
+                                <div id='clade' height="600px" width="auto"></div>
 
                             </div>
                         </div>
@@ -244,7 +272,7 @@
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
                     <div class="text-center my-auto copyright">
-                        <span>grit-realtime project 2021</span>
+                        <span>grit-realtime project 2021-2026</span>
                     </div>
                 </div>
             </footer>

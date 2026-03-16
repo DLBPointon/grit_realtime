@@ -3,6 +3,9 @@ function makegraph_pie() {
     var one = document.getElementById('RightGraphSelector2X');
     one = one.options[one.selectedIndex].value
 
+    var legendToggle = document.getElementById('RightGraph2LegendToggle');
+    var showLegend = legendToggle ? legendToggle.checked : true;
+
     var url = 'http://0.0.0.0:8001/gritdata?select=' + one
 
     d3.json(url, function (error, data) {
@@ -31,6 +34,7 @@ function makegraph_pie() {
         var layout = {
             width: elmntr2,
             autosize: true,
+            showlegend: showLegend,
             margin: {
                 l: 50,
                 r: 50,

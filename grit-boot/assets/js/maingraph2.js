@@ -8,6 +8,9 @@ function makegraph_2() {
     two = two.options[two.selectedIndex].value
     var three = 'project_type'
 
+    var legendToggle = document.getElementById('MainGraph2LegendToggle');
+    var showLegend = legendToggle ? legendToggle.checked : true;
+
     var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three
 
     d3.json(url, function (error, data) {
@@ -66,6 +69,7 @@ function makegraph_2() {
                 l: 50,
                 r: 0,
             },
+            showlegend: showLegend,
             legend: {
                 font: { size: 8, },
                 yanchor: 'middle',
