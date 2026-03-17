@@ -1,6 +1,7 @@
 function tabulatortabletelo() {
+    const { ADDRESS } = window.GRIT_STATIC;
 
-    var tata = 'http://0.0.0.0:8001/gritdata?'
+    var tata = ADDRESS
 
     d3.json(tata, function (error, data) {
         var table = new Tabulator("#teloTableLoc", {

@@ -2,6 +2,8 @@ TESTER = document.getElementById('maingraph2');
 
 function makegraph_2() {
 
+    const { ADDRESS } = window.GRIT_STATIC;
+
     var one = document.getElementById('MainGraphSelector2X');
     one = one.options[one.selectedIndex].value
     var two = document.getElementById('MainGraphSelector2Y');
@@ -11,7 +13,7 @@ function makegraph_2() {
     var legendToggle = document.getElementById('MainGraph2LegendToggle');
     var showLegend = legendToggle ? legendToggle.checked : true;
 
-    var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three
+    var url = ADDRESS + 'select=' + one + ',' + two + ',' + three
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -68,12 +70,16 @@ function makegraph_2() {
             margin: {
                 l: 50,
                 r: 0,
+                t: 30
             },
             showlegend: showLegend,
             legend: {
                 font: { size: 8, },
-                yanchor: 'middle',
-                xanchor: 'right'
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
             },
             width: elmnt
         };

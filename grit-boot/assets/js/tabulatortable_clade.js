@@ -1,8 +1,9 @@
 function tabulatortableClade() {
+    const { ADDRESS } = window.GRIT_STATIC;
     var one = document.getElementById('CladeSelector');
     prefix = one.value
 
-    var tableData = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&' +
+    var tableData = ADDRESS + 'order=family_name.asc&' +
         'prefix_sl=in.(' + prefix +
         ')&select=sample_id,prefix_dl,family_name,manual_interventions,' +
         'chromosome_assignments,chromosome_naming,expected_sex,observed_sex,' +

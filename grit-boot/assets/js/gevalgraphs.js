@@ -2,13 +2,18 @@ TESTER = document.getElementById('gevalgraph1');
 
 function gevalgraph1() {
 
+    const { ADDRESS } = window.GRIT_STATIC;
+
     var three = document.getElementById('gevalgraph1gb');
     three = three.options[three.selectedIndex].value
     var one = 'sample_id';
     var two = 'manual_interventions';
     var four = 'length_after';
 
-    var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three + ',' + four;
+    var legendToggle = document.getElementById('GevalGraph1LegendToggle');
+    var showLegend = legendToggle ? legendToggle.checked : true;
+
+    var url = ADDRESS + 'select=' + one + ',' + two + ',' + three + ',' + four;
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -49,6 +54,17 @@ function gevalgraph1() {
                 title: 'Manual Interventions (normalised to 1Gb)',
                 tickvals: [0, 1000, 2000, 3000, 4000, 5000, 6000, 7000],
                 ticktext: [0, 1, 2, 3, 4, 5, 6, 7]
+            },
+            showlegend: showLegend,
+            legend: {
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
+            },
+            margin: {
+                t: 30
             },
             width: elmntgg1
         };

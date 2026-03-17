@@ -1,16 +1,17 @@
 function tabulatortableOri() {
+    const { ADDRESS } = window.GRIT_STATIC;
     var one = document.getElementById('CladeSelectorP');
     prefix = one.value
 
     var tickets = ['GRIT', 'RC'];
     if (tickets.includes(prefix)) {
-        var tableData = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&' +
+        var tableData = ADDRESS + 'order=family_name.asc&' +
             '&project_code=in.(' + prefix +
             ')&select=sample_id,prefix_dl,family_name,manual_interventions,' +
             'chromosome_assignments,chromosome_naming,expected_sex,observed_sex,' +
             'curated_allosomes,curated_autosomes,project_code'
     } else {
-        var tableData = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&' +
+        var tableData = ADDRESS + 'order=family_name.asc&' +
             '&project_type=in.(' + prefix +
             ')&select=sample_id,prefix_dl,family_name,manual_interventions,' +
             'chromosome_assignments,chromosome_naming,expected_sex,observed_sex,' +

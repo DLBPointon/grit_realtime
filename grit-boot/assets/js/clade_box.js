@@ -1,4 +1,5 @@
 function clade_box() {
+    const { ADDRESS } = window.GRIT_STATIC;
     var one = document.getElementById('CladeSelector');
     prefix = one.options[one.selectedIndex].value
 
@@ -8,8 +9,11 @@ function clade_box() {
     var four = document.getElementById('CladeGraphSelector2C');
     four = four.options[four.selectedIndex].value
 
-    var url = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&prefix_sl=in.('
-        + prefix + ')&select=family_name,prefix_dl,' + three
+    var legendToggle = document.getElementById('CladeBoxLegendToggle');
+    var showLegend = legendToggle ? legendToggle.checked : true;
+
+    var url = ADDRESS + 'order=family_name.asc&prefix_sl=in.('
+        + prefix + ')&select=family_name,prefix_dl,prefix_fn,project_type,' + three
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -45,10 +49,18 @@ function clade_box() {
         var layout = {
             width: elmntr1,
             autosize: true,
+            showlegend: showLegend,
+            legend: {
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
+            },
             margin: {
                 l: 50,
                 r: 50,
-                t: 0
+                t: 30
             },
         };
 

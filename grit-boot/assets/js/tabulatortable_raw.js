@@ -1,6 +1,8 @@
 function tabulatortableraw() {
 
-    d3.json('http://0.0.0.0:8001/gritdata?', function (error, data) {
+    const { ADDRESS } = window.GRIT_STATIC;
+
+    d3.json(ADDRESS, function (error, data) {
         var table = new Tabulator("#tableLoc", {
             data: data,
             pagination: 'local',

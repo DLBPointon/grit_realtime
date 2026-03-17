@@ -2,13 +2,18 @@ TESTER = document.getElementById('gevalgraph3');
 
 function gevalgraph3() {
 
+    const { ADDRESS } = window.GRIT_STATIC;
+
     var three = document.getElementById('gevalgraph3gb');
     three = three.options[three.selectedIndex].value
     var one = 'sample_id';
     var two = 'scaff_count_change';
     var four = 'length_after';
 
-    var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three + ',' + four;
+    var legendToggle = document.getElementById('GevalGraph3LegendToggle');
+    var showLegend = legendToggle ? legendToggle.checked : true;
+
+    var url = ADDRESS + 'select=' + one + ',' + two + ',' + three + ',' + four;
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -47,6 +52,17 @@ function gevalgraph3() {
             },
             yaxis: {
                 title: 'Scaff count change (%)'
+            },
+            showlegend: showLegend,
+            legend: {
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
+            },
+            margin: {
+                t: 30
             },
             width: elmntgg3
 

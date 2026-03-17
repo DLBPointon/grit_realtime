@@ -2,13 +2,18 @@ TESTER = document.getElementById('gevalgraph4');
 
 function gevalgraph4() {
 
+    const { ADDRESS } = window.GRIT_STATIC;
+
     var three = document.getElementById('gevalgraph4gb');
     three = three.options[three.selectedIndex].value
     var one = 'sample_id';
     var two = 'assignment';
     var four = 'length_after';
 
-    var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three + ',' + four;
+    var legendToggle = document.getElementById('GevalGraph4LegendToggle');
+    var showLegend = legendToggle ? legendToggle.checked : true;
+
+    var url = ADDRESS + 'select=' + one + ',' + two + ',' + three + ',' + four;
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -48,7 +53,18 @@ function gevalgraph4() {
             yaxis: {
                 title: 'Sequence assigned to chromosome (%)'
             },
-            width: elmntgg4
+            width: elmntgg4,
+            showlegend: showLegend,
+            legend: {
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
+            },
+            margin: {
+                t: 30
+            }
 
         };
 
