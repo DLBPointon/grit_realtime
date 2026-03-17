@@ -50,7 +50,7 @@ function cladegrapherproj() {
             + prefix + ')&select=family_name,prefix_sl,prefix_fn,prefix_dl,' + two + ',' + three
     } else {
         var url = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&project_type=in.('
-            + prefix + ')&select=family_name,prefix_sl,prefix_fn,prefix_dl' + two + ',' + three
+            + prefix + ')&select=family_name,prefix_sl,prefix_fn,prefix_dl,' + two + ',' + three
     };
 
     console.log(url)
