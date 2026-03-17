@@ -1,6 +1,8 @@
 function tabler() {
 
-    var url = 'http://0.0.0.0:8001/gritdata?select=sample_id,prefix_sl,family_name,length_change,scaff_n50_change,scaff_count_change,manual_interventions,date_in_ymd'
+    const { ADDRESS } = window.GRIT_STATIC;
+
+    var url = ADDRESS + 'select=sample_id,prefix_sl,family_name,length_change,scaff_n50_change,scaff_count_change,manual_interventions,date_in_ymd'
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);

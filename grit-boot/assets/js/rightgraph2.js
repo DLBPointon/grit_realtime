@@ -1,12 +1,14 @@
 function makegraph_pie() {
 
+    const { ADDRESS } = window.GRIT_STATIC;
+
     var one = document.getElementById('RightGraphSelector2X');
     one = one.options[one.selectedIndex].value
 
     var legendToggle = document.getElementById('RightGraph2LegendToggle');
     var showLegend = legendToggle ? legendToggle.checked : true;
 
-    var url = 'http://0.0.0.0:8001/gritdata?select=' + one
+    var url = ADDRESS + 'select=' + one
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -35,10 +37,17 @@ function makegraph_pie() {
             width: elmntr2,
             autosize: true,
             showlegend: showLegend,
+            legend: {
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
+            },
             margin: {
                 l: 50,
                 r: 50,
-                t: 0
+                t: 30
             },
         };
 

@@ -2,35 +2,7 @@ TESTER = document.getElementById('test');
 
 function makegraph() {
 
-    const SINGLE_LETTER_MAP = {
-        a: "Amphibians",
-        b: "Birds",
-        c: "Non-Vascular plants",
-        d: "Dicotyledons",
-        e: "Echinoderm",
-        f: "Fishes",
-        g: "Fungi",
-        h: "Platyhelminths",
-        i: "Insects",
-        j: "Jellyfish and other Cnidaria",
-        k: "Other chordates",
-        l: "Monocotyledons(lilies etc.)",
-        m: "Mammals",
-        n: "Nematodes",
-        o: "Sponges",
-        p: "Protists",
-        q: "Other arthropods",
-        r: "Reptiles",
-        s: "Sharks and relatives",
-        t: "Other animal phyla",
-        u: "Algae",
-        v: "Other vascular plants",
-        w: "Annelids(worms)",
-        x: "Molluscs",
-        y: "Bacteria",
-        z: "Archea",
-        "-": "Viruses"
-    }
+    const { ADDRESS, SINGLE_LETTER_MAP } = window.GRIT_STATIC;
 
 
     var one = document.getElementById('MainGraphSelector1X');
@@ -44,9 +16,9 @@ function makegraph() {
     var showLegend = legendToggle ? legendToggle.checked : true;
 
     if (two === 'mipergb') {
-        var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',manual_interventions,' + three + ',length_after'
+        var url = ADDRESS + 'select=' + one + ',manual_interventions,' + three + ',length_after'
     } else {
-        var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three
+        var url = ADDRESS + 'select=' + one + ',' + two + ',' + three
     }
 
     d3.json(url, function (error, data) {
@@ -107,13 +79,17 @@ function makegraph() {
             margin: {
                 l: 50,
                 r: 50,
-                b: 100
+                b: 100,
+                t: 30
             },
             showlegend: showLegend,
             legend: {
                 font: { size: 8, },
-                yanchor: 'middle',
-                xanchor: 'right'
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
             },
             autosize: true,
             width: elmnt

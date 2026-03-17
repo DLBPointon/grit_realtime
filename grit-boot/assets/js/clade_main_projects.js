@@ -1,33 +1,5 @@
 function cladegrapherproj() {
-    const SINGLE_LETTER_MAP = {
-        a: "Amphibians",
-        b: "Birds",
-        c: "Non-Vascular plants",
-        d: "Dicotyledons",
-        e: "Echinoderm",
-        f: "Fishes",
-        g: "Fungi",
-        h: "Platyhelminths",
-        i: "Insects",
-        j: "Jellyfish and other Cnidaria",
-        k: "Other chordates",
-        l: "Monocotyledons(lilies etc.)",
-        m: "Mammals",
-        n: "Nematodes",
-        o: "Sponges",
-        p: "Protists",
-        q: "Other arthropods",
-        r: "Reptiles",
-        s: "Sharks and relatives",
-        t: "Other animal phyla",
-        u: "Algae",
-        v: "Other vascular plants",
-        w: "Annelids(worms)",
-        x: "Molluscs",
-        y: "Bacteria",
-        z: "Archea",
-        "-": "Viruses"
-    }
+    const { ADDRESS, SINGLE_LETTER_MAP } = window.GRIT_STATIC;
 
     var one = document.getElementById('CladeSelectorP');
     prefix = one.options[one.selectedIndex].value
@@ -46,11 +18,11 @@ function cladegrapherproj() {
 
     var tickets = ['GRIT', 'RC'];
     if (tickets.includes(prefix)) {
-        var url = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&project_code=in.('
+        var url = ADDRESS + 'order=family_name.asc&project_code=in.('
             + prefix + ')&select=family_name,prefix_sl,prefix_fn,prefix_dl,' + two + ',' + three
     } else {
-        var url = 'http://0.0.0.0:8001/gritdata?order=family_name.asc&project_type=in.('
-            + prefix + ')&select=family_name,prefix_sl,prefix_fn,prefix_dl' + two + ',' + three
+        var url = ADDRESS + 'order=family_name.asc&project_type=in.('
+            + prefix + ')&select=family_name,prefix_sl,prefix_fn,prefix_dl,' + two + ',' + three
     };
 
     console.log(url)
@@ -113,12 +85,16 @@ function cladegrapherproj() {
             margin: {
                 l: 50,
                 r: 0,
+                t: 30
             },
             showlegend: showLegend,
             legend: {
                 font: { size: 8, },
-                yanchor: 'middle',
-                xanchor: 'right'
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
             },
             width: elmnt
         };

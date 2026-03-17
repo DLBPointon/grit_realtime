@@ -1,9 +1,14 @@
 function telo_pie() {
 
+    const { ADDRESS } = window.GRIT_STATIC;
+
     var one = document.getElementById('telo_selector1');
     one = one.options[one.selectedIndex].value
 
-    var url = 'http://0.0.0.0:8001/gritdata?select=' + one
+    var legendToggle = document.getElementById('TeloPieLegendToggle');
+    var showLegend = legendToggle ? legendToggle.checked : true;
+
+    var url = ADDRESS + 'select=' + one
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -11,7 +16,11 @@ function telo_pie() {
         var count = {};
 
         data.forEach((item) => {
-            c.push(item[one]);
+            var value = item[one];
+            if (value === null || value === undefined || value === '') {
+                return;
+            }
+            c.push(value);
         });
 
         for (var i = 0; i < c.length; ++i) {
@@ -31,10 +40,18 @@ function telo_pie() {
         var layout = {
             width: elmntr2,
             autosize: true,
+            showlegend: showLegend,
+            legend: {
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
+            },
             margin: {
                 l: 50,
                 r: 50,
-                t: 0
+                t: 30
             },
         };
 

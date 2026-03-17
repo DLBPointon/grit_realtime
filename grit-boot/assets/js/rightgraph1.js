@@ -2,37 +2,7 @@ TESTER = document.getElementById('rightgraph1');
 
 function makegraph_box() {
 
-    const SINGLE_LETTER_MAP = {
-        a: "Amphibians",
-        b: "Birds",
-        c: "Non-Vascular plants",
-        d: "Dicotyledons",
-        e: "Echinoderm",
-        f: "Fishes",
-        g: "Fungi",
-        h: "Platyhelminths",
-        i: "Insects",
-        j: "Jellyfish and other Cnidaria",
-        k: "Other chordates",
-        l: "Monocotyledons(lilies etc.)",
-        m: "Mammals",
-        n: "Nematodes",
-        o: "Sponges",
-        p: "Protists",
-        q: "Other arthropods",
-        r: "Reptiles",
-        s: "Sharks and relatives",
-        t: "Other animal phyla",
-        u: "Algae",
-        v: "Other vascular plants",
-        w: "Annelids(worms)",
-        x: "Molluscs",
-        y: "Bacteria",
-        z: "Archea",
-        "-": "Viruses"
-    }
-
-
+    const { ADDRESS, SINGLE_LETTER_MAP } = window.GRIT_STATIC;
     var two = document.getElementById('RightGraphSelector1Y');
     two = two.options[two.selectedIndex].value
     var three = document.getElementById('RightGraphSelector1C');
@@ -42,9 +12,9 @@ function makegraph_box() {
     var showLegend = legendToggle ? legendToggle.checked : true;
 
     if (two === 'mipergb') {
-        var url = 'http://0.0.0.0:8001/gritdata?select=manual_interventions,' + three + ',length_after'
+        var url = ADDRESS + 'select=manual_interventions,' + three + ',length_after'
     } else {
-        var url = 'http://0.0.0.0:8001/gritdata?select=' + two + ',' + three
+        var url = ADDRESS + 'select=' + two + ',' + three
     }
 
     d3.json(url, function (error, data) {
@@ -86,10 +56,17 @@ function makegraph_box() {
             width: elmntr1,
             autosize: true,
             showlegend: showLegend,
+            legend: {
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
+            },
             margin: {
                 l: 50,
                 r: 50,
-                t: 0
+                t: 30
             },
         };
 

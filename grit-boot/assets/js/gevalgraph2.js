@@ -2,13 +2,18 @@ TESTER = document.getElementById('gevalgraph2');
 
 function gevalgraph2() {
 
+    const { ADDRESS } = window.GRIT_STATIC;
+
     var three = document.getElementById('gevalgraph2gb');
     three = three.options[three.selectedIndex].value
     var one = 'sample_id';
     var two = 'scaff_n50_change';
     var four = 'length_after';
 
-    var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three + ',' + four;
+    var legendToggle = document.getElementById('GevalGraph2LegendToggle');
+    var showLegend = legendToggle ? legendToggle.checked : true;
+
+    var url = ADDRESS + 'select=' + one + ',' + two + ',' + three + ',' + four;
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -47,6 +52,17 @@ function gevalgraph2() {
             },
             yaxis: {
                 title: 'Scaff N50 count change (%)'
+            },
+            showlegend: showLegend,
+            legend: {
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
+            },
+            margin: {
+                t: 30
             },
             width: elmntgg2
 

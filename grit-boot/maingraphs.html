@@ -9,7 +9,10 @@
     src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
     crossorigin="anonymous"></script>
+    <script src="assets/js/static_values.js"></script>
+    <script src="assets/js/page_helpers.js"></script>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/custom.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
@@ -21,30 +24,15 @@
 <body id="page-top">
 <script>
     window.onload=function(){
+        assertStaticValues();
         gevalgraph1();
         gevalgraph2();
         gevalgraph3();
         gevalgraph4();
-}</script>
+}
+</script>
     <div id="wrapper">
-        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
-            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
-                    <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
-                    <div class="sidebar-brand-text mx-3"><span>grit-rt</span></div>
-                </a>
-                <hr class="sidebar-divider my-0">
-                <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="datedash.html"><i class="fas fa-greater-than"></i><span>Date Dash</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="maingraphs.html"><i class="fas fa-greater-than"></i><span>gEVAL Graphs</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="clade_insights.html"><i class="fas fa-greater-than"></i><span>Clade Insights</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="project_insights.html"><i class="fas fa-greater-than"></i><span>Project Insights</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="telo_insights.html"><i class="fas fa-greater-than"></i><span>Telomere Insights</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-table"></i><span>Table</span></a></li>
-                </ul>
-                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
-            </div>
-        </nav>
+        <div id="site-header"></div>
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
                 <div class="row">
@@ -59,6 +47,12 @@
                             <div class="card-body" style="height: 25px;"></div>
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary font-weight-bold m-0">Graph Selector</h6>
+                                </div>
+                                <div class="card-body" style="height: 25px;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="GevalGraph1LegendToggle" onchange="gevalgraph1()" checked>
+                                        <label class="form-check-label" for="GevalGraph1LegendToggle">Show legend</label>
+                                    </div>
                                 </div>
                                 <label for="gevalgraph1gb"></label>
                                 <select id="gevalgraph1gb" onchange="gevalgraph1()">
@@ -89,6 +83,12 @@
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary font-weight-bold m-0">Graph Selector</h6>
                                 </div>
+                                <div class="card-body" style="height: 25px;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="GevalGraph2LegendToggle" onchange="gevalgraph2()" checked>
+                                        <label class="form-check-label" for="GevalGraph2LegendToggle">Show legend</label>
+                                    </div>
+                                </div>
                                 <label for="gevalgraph2gb"></label>
                                 <select id="gevalgraph2gb" onchange="gevalgraph2()">
                                     <option value="prefix_sl" selected='selected'>
@@ -117,6 +117,12 @@
                             <div class="card-body" style="height: 25px;"></div>
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary font-weight-bold m-0">Graph Selector</h6>
+                                </div>
+                                <div class="card-body" style="height: 25px;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="GevalGraph3LegendToggle" onchange="gevalgraph3()" checked>
+                                        <label class="form-check-label" for="GevalGraph3LegendToggle">Show legend</label>
+                                    </div>
                                 </div>
                                 <label for="gevalgraph3gb"></label>
                                 <select id="gevalgraph3gb" onchange="gevalgraph3()">
@@ -147,6 +153,12 @@
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary font-weight-bold m-0">Graph Selector</h6>
                                 </div>
+                                <div class="card-body" style="height: 25px;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="GevalGraph4LegendToggle" onchange="gevalgraph4()" checked>
+                                        <label class="form-check-label" for="GevalGraph4LegendToggle">Show legend</label>
+                                    </div>
+                                </div>
                                 <label for="gevalgraph4gb"></label>
                                 <select id="gevalgraph4gb" onchange="gevalgraph4()">
                                     <option value="prefix_sl" selected='selected'>
@@ -166,8 +178,10 @@
                     </div>
                 </div>
             </div>
+            <div id="site-footer"></div>
         </div>
     </div>
+    <script src="assets/js/partials.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/theme.js"></script>
 </body>

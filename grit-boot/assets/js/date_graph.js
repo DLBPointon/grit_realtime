@@ -2,6 +2,11 @@ TESTER = document.getElementById('dategraphLoc');
 
 function dategrapher() {
 
+    const { ADDRESS } = window.GRIT_STATIC;
+
+    var legendToggle = document.getElementById('DateGraphLegendToggle');
+    var showLegend = legendToggle ? legendToggle.checked : true;
+
     var one = document.getElementById('dategraphGen');
     one = one.options[one.selectedIndex].value
 
@@ -14,7 +19,7 @@ function dategrapher() {
 
     var labels = 'sample_id'
 
-    var url = 'http://0.0.0.0:8001/gritdata?select=' + one + ',' + two + ',' + three + ',' + four + ',' + labels
+    var url = ADDRESS + 'select=' + one + ',' + two + ',' + three + ',' + four + ',' + labels
 
     d3.json(url, function (error, data) {
         if (error) return console.warn(error);
@@ -85,6 +90,17 @@ function dategrapher() {
             },
             yaxis: {
                 autorange: true
+            },
+            showlegend: showLegend,
+            legend: {
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom'
+            },
+            margin: {
+                t: 30
             },
             width: elmntdg
         };
